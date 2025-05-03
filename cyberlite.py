@@ -11,12 +11,6 @@ colorama.init(convert=True, autoreset=True)
 colorama.just_fix_windows_console()
 import requests
 
-def get_my_ip():
-    try:
-        ip = requests.get("https://ifconfig.co", headers={"User-Agent": "curl"}).text.strip()
-        return ip
-    except Exception as e:
-        return "DESCONHECIDO"
 
 def buildlogger(webhook):
     code = f"""@echo off
